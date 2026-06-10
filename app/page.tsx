@@ -56,7 +56,7 @@ export default function Home() {
 
           <div className="mt-10">
             <Link
-              href="#features"
+              href="/sightseeing"
               className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-emerald-500/25 transition-all hover:scale-105 hover:shadow-emerald-500/40 hover:brightness-110"
             >
               Get Started

@@ -25,7 +25,7 @@ export function Hero() {
           </h1>
 
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground text-pretty">
-            PathMatrix turns complex routes into clear decisions — interactive maps,
+          PathMatrix TEST turns complex routes into clear decisions — interactive maps,
             real-time analytics, and path optimization in one unified platform.
           </p>
 
