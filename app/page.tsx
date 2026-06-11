@@ -9,6 +9,7 @@ const features = [
       "Discover the smartest paths through cities and landmarks. Our adaptive engine balances travel time, crowd density, and your must-see stops into one seamless itinerary.",
     accent: "from-emerald-400 to-teal-500",
     glow: "bg-emerald-500/20",
+    href: "/sightseeing",
   },
   {
     icon: Car,
@@ -17,6 +18,7 @@ const features = [
       "Match riders in real time with intelligent pooling. Routes evolve on the fly as new passengers join, cutting wait times and emissions without sacrificing convenience.",
     accent: "from-violet-400 to-indigo-500",
     glow: "bg-violet-500/20",
+    href: "/rideshare",
   },
 ];
 
@@ -54,12 +56,19 @@ export default function Home() {
             turns complex mobility challenges into clear, efficient decisions.
           </p>
 
-          <div className="mt-10">
+          <div className="mt-10 flex flex-wrap justify-center gap-4">
             <Link
               href="/sightseeing"
-              className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-emerald-500/25 transition-all hover:scale-105 hover:shadow-emerald-500/40 hover:brightness-110"
+              className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-emerald-500/25 transition-all hover:scale-105 hover:shadow-emerald-500/40 hover:brightness-110"
             >
-              Get Started
+              Sightseeing Planner
+              <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+            </Link>
+            <Link
+              href="/rideshare"
+              className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-cyan-500 to-indigo-600 px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-cyan-500/25 transition-all hover:scale-105 hover:shadow-cyan-500/40 hover:brightness-110"
+            >
+              Rideshare Pooler
               <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
             </Link>
           </div>
@@ -71,9 +80,10 @@ export default function Home() {
           className="mx-auto mt-24 grid w-full max-w-4xl gap-6 sm:grid-cols-2"
         >
           {features.map((feature) => (
-            <article
+            <Link
               key={feature.title}
-              className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-8 backdrop-blur-md transition-all hover:border-white/20 hover:bg-white/[0.08]"
+              href={feature.href}
+              className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-8 backdrop-blur-md transition-all hover:border-white/20 hover:bg-white/[0.08] block"
             >
               <div
                 className={`pointer-events-none absolute -right-8 -top-8 size-32 rounded-full blur-3xl ${feature.glow} transition-opacity group-hover:opacity-100 opacity-60`}
@@ -85,14 +95,15 @@ export default function Home() {
                 <feature.icon className="size-6 text-white" strokeWidth={1.75} />
               </div>
 
-              <h2 className="text-xl font-semibold tracking-tight text-white">
+              <h2 className="text-xl font-semibold tracking-tight text-white flex items-center justify-between">
                 {feature.title}
+                <ArrowRight className="size-4 text-slate-500 transition-transform group-hover:translate-x-1" />
               </h2>
 
               <p className="mt-3 text-sm leading-relaxed text-slate-400">
                 {feature.description}
               </p>
-            </article>
+            </Link>
           ))}
         </section>
       </main>
