@@ -1,36 +1,267 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PathMatrix
 
-## Getting Started
+PathMatrix is a route optimization and intelligent mobility platform that demonstrates two real-world optimization problems:
 
-First, run the development server:
+1. **Sightseeing Route Optimization**
+2. **Dynamic Ride Sharing Optimization**
+
+The project provides interactive visualizations, route analytics, map-based exploration, and optimization dashboards powered by custom algorithms and backend APIs.
+
+---
+
+## Features
+
+### Sightseeing Route Optimization
+
+* Interactive route planning dashboard
+* Distance budget constraints
+* Category diversity constraints
+* Satisfaction decay visualization
+* Route comparison panel
+* Interactive Leaflet maps
+* Dynamic route optimization
+* Runtime and efficiency metrics
+
+### Dynamic Ride Sharing
+
+* Ride request management
+* Vehicle occupancy tracking
+* Route visualization
+* Passenger flow analytics
+* Pickup and drop-off sequencing
+* Distance and efficiency monitoring
+
+---
+
+## Tech Stack
+
+### Frontend
+
+* Next.js 16
+* React
+* TypeScript
+* Tailwind CSS
+* shadcn/ui
+* Lucide Icons
+* Leaflet
+* React Leaflet
+* Recharts
+
+### Backend
+
+* Python
+* FastAPI
+* Uvicorn
+
+### Data Exchange
+
+* REST APIs
+* JSON Request/Response Contracts
+
+---
+
+## Project Structure
+
+```text
+pathmatrix/
+├── app/
+│   ├── page.tsx
+│   ├── sightseeing/
+│   └── rideshare/
+│
+├── components/
+│   ├── sightseeing/
+│   └── rideshare/
+│
+├── lib/
+│   ├── api.ts
+│   ├── api-types.ts
+│   ├── mock-data.ts
+│   └── types.ts
+│
+├── public/
+├── README.md
+└── package.json
+```
+
+---
+
+## Installation
+
+Clone the repository:
+
+```bash
+git clone <repository-url>
+cd pathmatrix
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```text
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## Environment Variables
 
-To learn more about Next.js, take a look at the following resources:
+Create:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```text
+.env.local
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Add:
 
-## Deploy on Vercel
+```env
+NEXT_PUBLIC_API_URL=http://localhost:8000
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Update this value when deploying the backend.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## Production Build
+
+Build the project:
+
+```bash
+npm run build
+```
+
+Start production mode:
+
+```bash
+npm run start
+```
+
+---
+
+## API Integration
+
+The frontend communicates with backend optimization services through:
+
+### Sightseeing Optimization
+
+```http
+POST /optimize-route
+```
+
+Returns:
+
+* Optimized route
+* Total distance
+* Effective satisfaction
+* Selected locations
+* Algorithm metadata
+
+### Ride Sharing Optimization
+
+```http
+POST /ride-request
+```
+
+Returns:
+
+* Updated vehicle route
+* Passenger trace
+* Occupancy changes
+* Distance metrics
+
+---
+
+## Visualization Components
+
+### Maps
+
+* Leaflet-based route visualization
+* Dynamic markers
+* Route polylines
+* Auto-fit viewport
+
+### Charts
+
+* Satisfaction Decay Analysis
+* Passenger Occupancy Trends
+* Route Efficiency Metrics
+
+---
+
+## Optimization Objectives
+
+### Sightseeing
+
+Maximize:
+
+* Tourist satisfaction
+* Category diversity
+
+Subject to:
+
+* Distance budget constraints
+* Satisfaction decay
+
+### Ride Sharing
+
+Minimize:
+
+* Additional travel distance
+* Passenger inconvenience
+
+Subject to:
+
+* Vehicle capacity
+* Pickup/drop-off ordering constraints
+
+---
+
+## Current Status
+
+### Frontend
+
+* Landing Page Complete
+* Sightseeing Dashboard Complete
+* Ride Sharing Dashboard Complete
+* Maps Integrated
+* Charts Integrated
+* API Layer Ready
+
+### Backend
+
+* API Contracts Defined
+* Optimization Algorithms Integrated
+* FastAPI Endpoints Available
+
+---
+
+## Team
+
+PathMatrix Development Team
+
+Frontend:
+
+* Abhinav
+
+Backend & Optimization:
+
+* Team Members
+Varun, Harsh
+
+## License
+
+Academic Project / Educational Use
+
+```
+```
