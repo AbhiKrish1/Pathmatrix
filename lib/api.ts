@@ -44,9 +44,11 @@ import {
     });
   
     if (!response.ok) {
-      throw new Error("Failed to process ride request");
+      const errorBody = await response.text();
+      console.error("Backend Error:", errorBody);
+      throw new Error(errorBody);
     }
-  
+    
     return response.json();
   }
   /**

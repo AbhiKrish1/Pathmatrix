@@ -1,5 +1,7 @@
 "use client";
-
+import { mapRideResponseToVehicle } from "@/lib/ride-response-mapper";
+import { submitRideRequest, getCurrentRoute } from "@/lib/api";
+import { buildRideRequestPayload } from "@/lib/ride-payload-builder";
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, Car, Sparkles } from "lucide-react";
@@ -23,38 +25,59 @@ export default function RideshareDashboardPage() {
 
   const capacityReached = vehicle.occupancy >= vehicle.capacity;
 
-  const handleAcceptRequest = (id: string) => {
+  const handleAcceptRequest = async (id: string) => {
     if (capacityReached) return;
-
-    const targetRequest = requests.find(r => r.id === id);
+  
+    const targetRequest = requests.find((r) => r.id === id);
     if (!targetRequest) return;
-
-    // Update Request Status in Queue
-    setRequests(prev =>
-      prev.map(r => (r.id === id ? { ...r, status: "accepted" as const } : r))
-    );
-
-    // Update Vehicle State
-    setVehicle(prev => {
-      const updatedPassengers = [...prev.activePassengers, targetRequest.passengerName];
-      const newOccupancy = prev.occupancy + 1;
+  
+    try {
+      // Build request payload
+      const payload = buildRideRequestPayload(
+        targetRequest,
+        vehicle
+      );
+  
+      // Send to backend
+      const result = await submitRideRequest(payload);
+  
+      console.log(
+        "Ride Backend Response:",
+        JSON.stringify(result, null, 2)
+      );
+  
+      // Convert backend response into VehicleState
+      const updatedVehicle = {
+        ...mapRideResponseToVehicle(result, vehicle),
       
-      // Calculate pooled detour factor: adding a pickup/dropoff adds the request distance + a small pool overhead (15% detour)
-      const additionalDistance = targetRequest.distance * 1.15;
-      const newTotalDistance = prev.totalDistance + additionalDistance;
-
-      // Estimate traffic travel time: 4 mins per km in Bangalore traffic + 3 mins dispatch/stop delay
-      const additionalTime = Math.round(additionalDistance * 4 + 3);
-      const newEstimatedTime = prev.estimatedTime + additionalTime;
-
-      return {
-        ...prev,
-        occupancy: newOccupancy,
-        activePassengers: updatedPassengers,
-        totalDistance: parseFloat(newTotalDistance.toFixed(1)),
-        estimatedTime: newEstimatedTime
+        activePassengers: [
+          ...vehicle.activePassengers,
+          targetRequest.passengerName,
+        ],
       };
-    });
+  
+      console.log(
+        "Mapped Vehicle:",
+        JSON.stringify(updatedVehicle, null, 2)
+      );
+  
+      // Update the accepted request
+      setRequests((prev) =>
+        prev.map((r) =>
+          r.id === id
+            ? { ...r, status: "accepted" as const }
+            : r
+        )
+      );
+  
+      // Update vehicle using backend response
+      setVehicle(updatedVehicle);
+  
+      
+    } catch (error) {
+      console.error(error);
+      
+    }
   };
 
   const handleRejectRequest = (id: string) => {
