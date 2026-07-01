@@ -1,4 +1,7 @@
 "use client";
+import { optimizeSightseeingRoute } from "@/lib/api";
+import { buildOptimizeRoutePayload } from "@/lib/payload-builder";
+import { mapBackendRouteToLocations } from "@/lib/route-mapper";
 
 import {
   ArrowLeft,
@@ -173,48 +176,41 @@ export default function SightseeingPage() {
   }
 
   // Nearest-Neighbor Route Optimizer simulation
-  const handleOptimizeRoute = () => {
+  const handleOptimizeRoute = async () => {
     if (stops.length <= 1) return;
+  
     setIsOptimizing(true);
+  
+    try {
+      const payload = buildOptimizeRoutePayload(
+        source,
+        destination,
+        stops,
+        distanceBudget[0],
+        categoryThreshold[0]
+      );
+  
+      const result = await optimizeSightseeingRoute(payload);
+  
+      console.log("Backend Response:", result);
+      
+      const reorderedStops = mapBackendRouteToLocations(
+        result.route,
+        stops
+      );
+      
+      console.log("Mapped Stops:", reorderedStops);
+      setStops(reorderedStops);
 
-    setTimeout(() => {
-      // Start sorting nearest-neighbor stops starting from stop index 0
-      const sortedStops: Location[] = [stops[0]];
-      const remainingStops = [...stops.slice(1)];
 
-      while (remainingStops.length > 0) {
-        const current = sortedStops[sortedStops.length - 1];
-        let nearestIdx = 0;
-        let minDist = Infinity;
-
-        for (let i = 0; i < remainingStops.length; i++) {
-          const latDiff = remainingStops[i].lat - current.lat;
-          const lngDiff = remainingStops[i].lng - current.lng;
-          const dist = Math.sqrt(latDiff * latDiff + lngDiff * lngDiff);
-          if (dist < minDist) {
-            minDist = dist;
-            nearestIdx = i;
-          }
-        }
-
-        const nextStop = remainingStops[nearestIdx];
-        const latDiff = nextStop.lat - current.lat;
-        const lngDiff = nextStop.lng - current.lng;
-        const computedDist = parseFloat(
-          Math.max(0.6, Math.sqrt(Math.pow(latDiff * 111, 2) + Math.pow(lngDiff * 108, 2))).toFixed(1)
-        );
-
-        sortedStops.push({
-          ...nextStop,
-          distance: computedDist,
-        });
-
-        remainingStops.splice(nearestIdx, 1);
-      }
-
-      setStops(sortedStops);
+        
+      // We will update the UI using the backend response in the next step.
+    } catch (error) {
+      console.error(error);
+      alert("Failed to optimize route.");
+    } finally {
       setIsOptimizing(false);
-    }, 1200);
+    }
   };
 
   return (

@@ -49,3 +49,30 @@ import {
   
     return response.json();
   }
+  /**
+ * Get Current Ride Route
+ */
+export async function getCurrentRoute() {
+  const response = await fetch(`${API_BASE_URL}/current-route`);
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch current route");
+  }
+
+  return response.json();
+}
+
+/**
+ * Reset Ride Route
+ */
+export async function resetRideRoute() {
+  const response = await fetch(`${API_BASE_URL}/reset-route`, {
+    method: "POST",
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to reset ride route");
+  }
+
+  return response.json();
+}
