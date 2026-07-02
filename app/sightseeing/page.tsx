@@ -192,14 +192,13 @@ export default function SightseeingPage() {
   
       const result = await optimizeSightseeingRoute(payload);
   
-      console.log("Backend Response:", result);
       
       const reorderedStops = mapBackendRouteToLocations(
         result.route,
         stops
       );
       
-      console.log("Mapped Stops:", reorderedStops);
+     
       setStops(reorderedStops);
 
 
@@ -207,7 +206,7 @@ export default function SightseeingPage() {
       // We will update the UI using the backend response in the next step.
     } catch (error) {
       console.error(error);
-      alert("Failed to optimize route.");
+     
     } finally {
       setIsOptimizing(false);
     }

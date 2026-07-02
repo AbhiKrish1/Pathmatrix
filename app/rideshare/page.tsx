@@ -1,6 +1,6 @@
 "use client";
 import { mapRideResponseToVehicle } from "@/lib/ride-response-mapper";
-import { submitRideRequest, getCurrentRoute } from "@/lib/api";
+import { submitRideRequest } from "@/lib/api";
 import { buildRideRequestPayload } from "@/lib/ride-payload-builder";
 import { useState } from "react";
 import Link from "next/link";
@@ -41,11 +41,6 @@ export default function RideshareDashboardPage() {
       // Send to backend
       const result = await submitRideRequest(payload);
   
-      console.log(
-        "Ride Backend Response:",
-        JSON.stringify(result, null, 2)
-      );
-  
       // Convert backend response into VehicleState
       const updatedVehicle = {
         ...mapRideResponseToVehicle(result, vehicle),
@@ -56,11 +51,7 @@ export default function RideshareDashboardPage() {
         ],
       };
   
-      console.log(
-        "Mapped Vehicle:",
-        JSON.stringify(updatedVehicle, null, 2)
-      );
-  
+    
       // Update the accepted request
       setRequests((prev) =>
         prev.map((r) =>

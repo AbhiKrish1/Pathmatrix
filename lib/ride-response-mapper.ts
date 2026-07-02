@@ -13,7 +13,7 @@ export function mapRideResponseToVehicle(
     stop.location.lng,
   ]);
 
-  // Last passenger count
+  // Maximum simultaneous passengers from backend trace
   const maxPassengers =
   response.passenger_trace.length > 0
     ? Math.max(

@@ -7,8 +7,6 @@ export function buildRideRequestPayload(
   return {
     vehicle_capacity: vehicle.capacity,
 
-    current_route: [],
-
     request: {
       request_id: request.id,
 
