@@ -6,11 +6,11 @@ This repository contains the Member 2 backend work for RouteX/PathMatrix. It pro
 
 ## Current Status
 
-- FastAPI backend structure is ready.
-- Sightseeing route optimization API is available with placeholder logic.
-- Ride-sharing insertion heuristic is implemented separately and tested.
-- Distance matrix input is supported, with coordinate-based Euclidean distance as fallback.
-- Current route state is stored in memory for development and demo use.
+* FastAPI backend structure is ready.
+* Sightseeing route optimization API is integrated with greedy, beam, and genetic algorithms.
+* Ride-sharing insertion heuristic is implemented separately and tested.
+* Distance matrix input is supported, with coordinate-based Euclidean distance as fallback.
+* Current route state is stored in memory for development and demo use.
 
 ## Endpoints
 
@@ -55,8 +55,14 @@ python -m unittest discover -s tests
   "total_distance": 42.5,
   "total_effective_satisfaction": 18.72,
   "selected_location_ids": ["Museum"],
-  "algorithm": "placeholder_greedy_by_score",
-  "message": "Backend contract is ready. Replace this placeholder with the final optimization algorithm."
+  "algorithm": "greedy",
+  "penalty_count": 1,
+  "runtime_ms": 4.32,
+  "summary": "This route visits one location, Museum, achieving a total score of 18.72 over 42.50 units of travel.",
+  "explanations": [
+    "Museum was included because of its strong base score and category diversity."
+  ],
+  "message": "Route optimized successfully using the greedy algorithm."
 }
 ```
 
@@ -116,7 +122,7 @@ python -m unittest discover -s tests
 app/main.py        FastAPI routes
 app/models.py      Request and response schemas
 app/distance.py    Distance matrix and coordinate distance helpers
-app/optimizer.py   Placeholder sightseeing optimizer
+app/optimizer.py   Sightseeing optimizer integration
 app/rideshare.py   Ride-sharing insertion engine
 app/state.py       Temporary in-memory route state
 tests/             Unit tests

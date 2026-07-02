@@ -45,6 +45,7 @@ class OptimizeRouteRequest(BaseModel):
     category_threshold: int = Field(2, ge=1)
     decay_constant: float = Field(0.1, ge=0)
     distance_matrix: list[MatrixDistance] | None = None
+    algorithm: str = Field(default="greedy")
 
 
 class OptimizeRouteResponse(BaseModel):
@@ -53,6 +54,10 @@ class OptimizeRouteResponse(BaseModel):
     total_effective_satisfaction: float
     selected_location_ids: list[str]
     algorithm: str
+    penalty_count: int = 0
+    runtime_ms: float | None = None
+    summary: str | None = None
+    explanations: list[str] = Field(default_factory=list)
     message: str
 
 

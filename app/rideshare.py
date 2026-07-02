@@ -70,11 +70,23 @@ def request_flexibility_is_valid(route: list[RouteStop], request: RideRequest, l
 
     return actual_distance <= base_distance + request.flexibility
 
+def all_flexibility_constraints_valid(
+    route: list[RouteStop],
+    requests: dict[str, RideRequest],
+    lookup: DistanceLookup,
+) -> bool:
+
+    for request in requests.values():
+        if not request_flexibility_is_valid(route, request, lookup):
+            return False
+
+    return True
 
 def insert_request(
     route: list[RouteStop],
     new_request: RideRequest,
     capacity: int,
+    active_requests=None,
     distance_matrix=None,
 ) -> InsertionResult:
     started_at = perf_counter()
@@ -107,7 +119,15 @@ def insert_request(
             candidate = [*route_with_pickup[:drop_index], drop_stop, *route_with_pickup[drop_index:]]
             if not route_capacity_is_valid(candidate, capacity):
                 continue
-            if not request_flexibility_is_valid(candidate, request, lookup):
+            requests_to_check = dict(active_requests or {})
+
+            requests_to_check[request.request_id] = request
+
+            if not all_flexibility_constraints_valid(
+                candidate,
+                requests_to_check,
+                lookup,
+            ):
                 continue
 
             candidate_distance = route_distance(stop_locations(candidate), lookup)

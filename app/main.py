@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.distance import build_distance_lookup, route_distance
 from app.models import (
@@ -20,6 +21,19 @@ app = FastAPI(
     description="Backend API contracts and ride-sharing insertion heuristic for PathMatrix.",
 )
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 @app.get("/health")
 def health() -> dict[str, str]:
@@ -35,11 +49,14 @@ def optimize_route(payload: OptimizeRouteRequest) -> OptimizeRouteResponse:
 def ride_request(payload: RideRequestEnvelope) -> RideRequestResponse:
     current_route = payload.current_route or route_state.route
     capacity = payload.vehicle_capacity or route_state.vehicle_capacity
-    result = insert_request(current_route, payload.request, capacity, payload.distance_matrix)
+    result = insert_request(current_route, payload.request, capacity, route_state.active_requests, payload.distance_matrix)
 
-    if result.accepted and payload.current_route is None:
+    if result.accepted:
         route_state.route = result.route
         route_state.vehicle_capacity = capacity
+
+        if payload.request.request_id:
+            route_state.active_requests[payload.request.request_id] = payload.request
 
     return RideRequestResponse(
         accepted=result.accepted,
@@ -63,6 +80,8 @@ def current_route() -> CurrentRouteResponse:
 
 
 @app.post("/reset-route", response_model=CurrentRouteResponse)
-def reset_route(payload: ResetRouteRequest) -> CurrentRouteResponse:
+def reset_route(payload: ResetRouteRequest | None = None) -> CurrentRouteResponse:
+    if payload is None:
+        payload = ResetRouteRequest()
     route_state.reset(payload.vehicle_capacity, payload.start, payload.destination)
     return current_route()
