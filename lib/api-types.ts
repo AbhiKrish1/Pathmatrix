@@ -12,6 +12,12 @@ export interface RouteLocation {
     total_effective_satisfaction: number;
     selected_location_ids: string[];
     algorithm: string;
+  
+    penalty_count?: number;
+    runtime_ms?: number;
+    summary?: string;
+    explanations?: string[];
+  
     message?: string;
   }
   
