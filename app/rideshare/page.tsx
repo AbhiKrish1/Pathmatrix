@@ -1,6 +1,10 @@
 "use client";
 import { mapRideResponseToVehicle } from "@/lib/ride-response-mapper";
-import { submitRideRequest } from "@/lib/api";
+import {
+  submitRideRequest,
+  resetRideRoute,
+  getCurrentRoute,
+} from "@/lib/api";
 import { buildRideRequestPayload } from "@/lib/ride-payload-builder";
 import { useState } from "react";
 import Link from "next/link";
@@ -22,7 +26,8 @@ const glassPanel =
 export default function RideshareDashboardPage() {
   const [requests, setRequests] = useState<RideRequest[]>(INITIAL_REQUESTS);
   const [vehicle, setVehicle] = useState<VehicleState>(INITIAL_VEHICLE);
-
+  console.log("Vehicle state on render:", vehicle);
+  const [isResetting, setIsResetting] = useState(false);
   const capacityReached = vehicle.occupancy >= vehicle.capacity;
 
   const handleAcceptRequest = async (id: string) => {
@@ -77,6 +82,22 @@ export default function RideshareDashboardPage() {
     );
   };
 
+  const handleResetRoute = async () => {
+   setIsResetting(true);
+
+   try {
+    await resetRideRoute();
+
+    // Reset frontend state
+    setVehicle(INITIAL_VEHICLE);
+    setRequests(INITIAL_REQUESTS);
+  } catch (error) {
+    console.error("Failed to reset route:", error);
+  } finally {
+    setIsResetting(false);
+  }
+};
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-slate-950 text-white">
       {/* Background gradients */}
@@ -88,19 +109,30 @@ export default function RideshareDashboardPage() {
       <div className="relative mx-auto flex min-h-screen max-w-[1600px] flex-col gap-6 p-4 md:p-6 lg:p-8">
         {/* Header */}
         <header className="flex flex-wrap items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <Button
-              variant="outline"
-              size="sm"
-              className="border-white/10 bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white"
-              asChild
-            >
-              <Link href="/">
-                <ArrowLeft className="size-4" />
-                Back
-              </Link>
-            </Button>
-            <div>
+         <div className="flex items-center gap-4">
+  <Button
+    variant="outline"
+    size="sm"
+    className="border-white/10 bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white"
+    asChild
+  >
+    <Link href="/">
+      <ArrowLeft className="size-4" />
+      Back
+    </Link>
+  </Button>
+
+  <Button
+    variant="outline"
+    size="sm"
+    className="border-cyan-500/30 bg-cyan-500/10 text-cyan-300 hover:bg-cyan-500/20 hover:text-white"
+    onClick={handleResetRoute}
+    disabled={isResetting}
+  >
+    {isResetting ? "Resetting..." : "Reset Route"}
+  </Button>
+
+  <div>
               <div className="flex items-center gap-2">
                 <h1 className="text-xl font-semibold tracking-tight md:text-2xl flex items-center gap-2">
                   <Car className="size-6 text-cyan-400" />

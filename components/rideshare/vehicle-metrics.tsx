@@ -36,7 +36,7 @@ export default function VehicleMetrics({ vehicle }: VehicleMetricsProps) {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1.5 text-xs text-slate-400 font-semibold">
               <Users className="size-3.5 text-cyan-400" />
-              <span>VEHICLE SEAT OCCUPANCY</span>
+              <span>MAX PLANNED OCCUPANCY</span>
             </div>
             <span className="text-xs font-bold text-white">
               {vehicle.occupancy} / {vehicle.capacity} Seats

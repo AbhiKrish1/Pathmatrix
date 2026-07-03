@@ -70,9 +70,27 @@ export async function getCurrentRoute() {
 export async function resetRideRoute() {
   const response = await fetch(`${API_BASE_URL}/reset-route`, {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      vehicle_capacity: 4,
+      start: {
+        id: "S",
+        lat: 12.9716,
+        lng: 77.5946,
+      },
+      destination: {
+        id: "S",
+        lat: 12.9716,
+        lng: 77.5946,
+      },
+    }),
   });
 
   if (!response.ok) {
+    const error = await response.text();
+    console.error("Backend Error:", error);
     throw new Error("Failed to reset ride route");
   }
 
