@@ -22,8 +22,8 @@ def effective_satisfaction(
     return score
 
 
-def placeholder_optimize_route(payload: OptimizeRouteRequest) -> OptimizeRouteResponse:
-    """Simple deterministic placeholder until Member 1 plugs in a real optimizer."""
+def optimize_sightseeing_route(payload: OptimizeRouteRequest) -> OptimizeRouteResponse:
+    """Run the selected sightseeing optimizer and shape the API response."""
     started_at = perf_counter()
     algorithm = getattr(payload, "algorithm", None)
     if not algorithm and hasattr(payload, "model_extra") and payload.model_extra:

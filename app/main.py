@@ -10,7 +10,7 @@ from app.models import (
     RideRequestEnvelope,
     RideRequestResponse,
 )
-from app.optimizer import placeholder_optimize_route
+from app.optimizer import optimize_sightseeing_route
 from app.rideshare import calculate_passenger_trace, insert_request, stop_locations
 from app.state import route_state
 
@@ -42,14 +42,20 @@ def health() -> dict[str, str]:
 
 @app.post("/optimize-route", response_model=OptimizeRouteResponse)
 def optimize_route(payload: OptimizeRouteRequest) -> OptimizeRouteResponse:
-    return placeholder_optimize_route(payload)
+    return optimize_sightseeing_route(payload)
 
 
 @app.post("/ride-request", response_model=RideRequestResponse)
 def ride_request(payload: RideRequestEnvelope) -> RideRequestResponse:
     current_route = payload.current_route or route_state.route
     capacity = payload.vehicle_capacity or route_state.vehicle_capacity
-    result = insert_request(current_route, payload.request, capacity, route_state.active_requests, payload.distance_matrix)
+    result = insert_request(
+        current_route,
+        payload.request,
+        capacity,
+        route_state.active_requests,
+        payload.distance_matrix,
+    )
 
     if result.accepted:
         route_state.route = result.route

@@ -1,6 +1,6 @@
 import unittest
 from app.models import Location, SightseeingLocation, MatrixDistance, OptimizeRouteRequest
-from app.optimizer import placeholder_optimize_route
+from app.optimizer import optimize_sightseeing_route
 
 
 class SightseeingOptimizationTests(unittest.TestCase):
@@ -43,7 +43,7 @@ class SightseeingOptimizationTests(unittest.TestCase):
             distance_matrix=self.distance_matrix,
             algorithm="greedy",
         )
-        response = placeholder_optimize_route(request)
+        response = optimize_sightseeing_route(request)
         self.assertTrue(len(response.route) > 2)
         self.assertLessEqual(response.total_distance, 12.0)
         self.assertEqual(response.selected_location_ids, ["A", "B", "C"])
@@ -63,7 +63,7 @@ class SightseeingOptimizationTests(unittest.TestCase):
             distance_matrix=self.distance_matrix,
             algorithm="greedy",
         )
-        response = placeholder_optimize_route(request)
+        response = optimize_sightseeing_route(request)
         self.assertEqual(response.selected_location_ids, [])
         self.assertEqual(response.total_distance, 10.0)
 
@@ -79,7 +79,7 @@ class SightseeingOptimizationTests(unittest.TestCase):
             distance_matrix=self.distance_matrix,
             algorithm="beam",
         )
-        response = placeholder_optimize_route(request)
+        response = optimize_sightseeing_route(request)
         self.assertEqual(response.selected_location_ids, ["A", "B", "C"])
         self.assertEqual(response.total_distance, 10.0)
 
@@ -96,7 +96,7 @@ class SightseeingOptimizationTests(unittest.TestCase):
             distance_matrix=self.distance_matrix,
             algorithm="greedy",
         )
-        response = placeholder_optimize_route(request)
+        response = optimize_sightseeing_route(request)
 
         # Expected score (correct pre-arrival cumulative distance convention):
         # A: cumulative_before=0.0, satisfaction = 10 * exp(-0.1*0) = 10.000
