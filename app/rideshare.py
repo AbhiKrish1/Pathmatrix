@@ -93,6 +93,19 @@ def insert_request(
     lookup = build_distance_lookup(distance_matrix)
     request = ensure_request_id(new_request)
     original_distance = route_distance(stop_locations(route), lookup)
+    existing_requests = dict(active_requests or {})
+
+    if request.request_id in existing_requests or any(stop.request_id == request.request_id for stop in route):
+        runtime_ms = (perf_counter() - started_at) * 1000
+        return InsertionResult(
+            accepted=False,
+            reason=f"Request {request.request_id} has already been processed.",
+            route=route,
+            total_distance=round(original_distance, 3),
+            added_distance=0,
+            passenger_trace=calculate_passenger_trace(route),
+            runtime_ms=round(runtime_ms, 3),
+        )
 
     pickup_stop = RouteStop(
         location=request.pickup,
@@ -119,7 +132,7 @@ def insert_request(
             candidate = [*route_with_pickup[:drop_index], drop_stop, *route_with_pickup[drop_index:]]
             if not route_capacity_is_valid(candidate, capacity):
                 continue
-            requests_to_check = dict(active_requests or {})
+            requests_to_check = dict(existing_requests)
 
             requests_to_check[request.request_id] = request
 

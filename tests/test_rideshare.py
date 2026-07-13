@@ -73,6 +73,27 @@ class RideShareInsertionTests(unittest.TestCase):
 
         self.assertFalse(result.accepted)
 
+    def test_insert_request_rejects_duplicate_request_id(self):
+        route = [
+            RouteStop(location=loc("S"), stop_type=RouteStopType.start),
+            RouteStop(location=loc("A"), stop_type=RouteStopType.pickup, request_id="req-1", passenger_delta=1),
+            RouteStop(location=loc("B"), stop_type=RouteStopType.drop, request_id="req-1", passenger_delta=-1),
+        ]
+        request = RideRequest(
+            request_id="req-1",
+            pickup=loc("C"),
+            drop=loc("D"),
+            passengers=1,
+            base_distance=6,
+            flexibility=10,
+        )
+
+        result = insert_request(route, request, capacity=2, distance_matrix=matrix())
+
+        self.assertFalse(result.accepted)
+        self.assertIn("already been processed", result.reason)
+        self.assertEqual([stop.location.id for stop in result.route], ["S", "A", "B"])
+
 
 if __name__ == "__main__":
     unittest.main()
