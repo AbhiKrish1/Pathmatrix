@@ -26,7 +26,6 @@ const glassPanel =
 export default function RideshareDashboardPage() {
   const [requests, setRequests] = useState<RideRequest[]>(INITIAL_REQUESTS);
   const [vehicle, setVehicle] = useState<VehicleState>(INITIAL_VEHICLE);
-  console.log("Vehicle state on render:", vehicle);
   const [isResetting, setIsResetting] = useState(false);
   const capacityReached = vehicle.occupancy >= vehicle.capacity;
 
